@@ -12,6 +12,33 @@ Please note we have a code of conduct, please follow it in all your interactions
 2. Please fully test whether the existing features are affected by your modifications.
 3. Follow the git-flow workflow. You can see more about git-flow [here](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
+## Building the Project
+
+### Prerequisites
+- macOS 10.13 or later
+- Xcode 11.0 or later
+- Command Line Tools for Xcode
+
+### Build Instructions
+
+To build the project locally:
+
+```bash
+xcodebuild clean build \
+  -project "Hidden Bar.xcodeproj" \
+  -scheme "Hidden Bar" \
+  -configuration Release
+```
+
+### Automated Builds
+
+The project uses GitHub Actions to automatically build and package the app on every push to `main`, `develop`, or `copilot/**` branches. The CI workflow:
+- Builds the app using Xcode on macOS runners
+- Creates a DMG installation package
+- Uploads artifacts for download (retained for 30 days)
+
+You can download the built DMG from the Actions tab after a successful build.
+
 ### Branch name convention
 
 The branch name meaning should be clear and follow these conventions:

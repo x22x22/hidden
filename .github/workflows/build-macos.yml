@@ -1,0 +1,86 @@
+name: Build macOS App
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'copilot/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-13
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Show Xcode version
+      run: xcodebuild -version
+      
+    - name: List available schemes
+      run: xcodebuild -list -project "Hidden Bar.xcodeproj"
+      
+    - name: Build app
+      run: |
+        xcodebuild clean build \
+          -project "Hidden Bar.xcodeproj" \
+          -scheme "Hidden Bar" \
+          -configuration Release \
+          -derivedDataPath build \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+    
+    - name: Verify build output
+      run: |
+        echo "Checking build output..."
+        ls -lah "build/Build/Products/Release/"
+        if [ -d "build/Build/Products/Release/Hidden Bar.app" ]; then
+          echo "✅ Hidden Bar.app built successfully"
+          echo "App bundle size: $(du -sh "build/Build/Products/Release/Hidden Bar.app" | cut -f1)"
+        else
+          echo "❌ Hidden Bar.app not found"
+          exit 1
+        fi
+    
+    - name: Create DMG
+      run: |
+        # Create a temporary directory for DMG contents
+        mkdir -p dmg_contents
+        
+        # Copy the built app to the DMG directory
+        cp -r "build/Build/Products/Release/Hidden Bar.app" dmg_contents/
+        
+        # Create Applications symlink
+        ln -s /Applications dmg_contents/Applications
+        
+        # Create the DMG
+        hdiutil create -volname "Hidden Bar" \
+          -srcfolder dmg_contents \
+          -ov -format UDZO \
+          "Hidden-Bar.dmg"
+        
+        echo "✅ DMG created successfully"
+        ls -lh Hidden-Bar.dmg
+    
+    - name: Upload DMG artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Hidden-Bar-dmg
+        path: Hidden-Bar.dmg
+        retention-days: 30
+    
+    - name: Upload app bundle artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Hidden-Bar-app
+        path: build/Build/Products/Release/Hidden Bar.app
+        retention-days: 30
