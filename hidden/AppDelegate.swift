@@ -46,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate{
     func registerDefaultValues() {
          UserDefaults.standard.register(defaults: [
             UserDefaults.Key.isAutoStart: false,
-            UserDefaults.Key.isShowPreference: true,
+            UserDefaults.Key.isShowPreference: false,
             UserDefaults.Key.isAutoHide: true,
             UserDefaults.Key.numberOfSecondForAutoHide: 10.0,
             UserDefaults.Key.areSeparatorsHidden: false,
