@@ -50,6 +50,9 @@ brew install --cask hiddenbar
 
 * `⌘` + drag to move the Hidden icons around in the menu bar.
 * Click the Arrow icon to hide menu bar items.
+* Open Preferences to configure auto-start behavior and other settings.
+  * **Auto-start on login**: Enable this to launch Hidden Bar automatically when you log in.
+  * **Show preferences on launch**: When enabled, the preferences window will open at startup. When disabled (default), the app starts minimized in the menu bar only.
 
 <p align="center">
 	<img src="img/tutorial.gif">
